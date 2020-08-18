@@ -22,35 +22,15 @@ provider:
   runtime: nodejs12.x
   stage: dev
   region: ca-central-1
+  iamRoleStatements:
+    - ${file(iam/chatsTableIAM.yml):chatsTableIAM}
+    - ${file(iam/connectionsTableIAM.yml):connectionsTableIAM}
 
-# you can add statements to the Lambda function's IAM Role here
-#  iamRoleStatements:
-#    - Effect: "Allow"
-#      Action:
-#        - "s3:ListBucket"
-#      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
-#    - Effect: "Allow"
-#      Action:
-#        - "s3:PutObject"
-#      Resource:
-#        Fn::Join:
-#          - ""
-#          - - "arn:aws:s3:::"
-#            - "Ref" : "ServerlessDeploymentBucket"
-#            - "/*"
 
-# you can define service wide environment variables here
-#  environment:
-#    variable1: value1
-
-# you can add packaging information here
-#package:
-#  include:
-#    - include-me.js
-#    - include-me-dir/**
-#  exclude:
-#    - exclude-me.js
-#    - exclude-me-dir/**
+resources:
+  Resources:
+    chatsTable: ${file(resources/chatsTable.yml):chatsTable}
+    connectionsTable: ${file(resources/connectionsTable.yml):connectionsTable}
 
 functions:
   hello:
@@ -62,24 +42,20 @@ functions:
   createChat:
     handler: src/createChat.handler
     events:
-      - http:
-          path: /create
-          method: get
+      - websocket:
+          route: create
   joinChat:
     handler: src/joinChat.handler
     events:
-      - http:
-          path: /join
-          method: get
+      - websocket:
+          route: join
   leaveChat:
     handler: src/leaveChat.handler
     events:
-      - http:
-          path: /leave
-          method: get
+      - websocket:
+          route: $disconnect
   sendMessage:
     handler: src/sendMessage.handler
     events:
-      - http:
-          path: /send
-          method: get
+      - websocket:
+          route: send
