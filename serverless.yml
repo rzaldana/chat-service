@@ -25,6 +25,9 @@ provider:
   iamRoleStatements:
     - ${file(iam/chatsTableIAM.yml):chatsTableIAM}
     - ${file(iam/connectionsTableIAM.yml):connectionsTableIAM}
+  environment:
+    CHATS_TABLE_NAME: ${self:custom.chatsTable.name}
+    CONNECTIONS_TABLE_NAME: ${self:custom.connectionsTable.name}
 
 
 resources:
@@ -59,3 +62,11 @@ functions:
     events:
       - websocket:
           route: send
+
+custom:
+  chatsTable:
+    name: !Ref chatsTable
+    arn: !GetAtt chatsTable.Arn
+  connectionsTable:
+    name: !Ref connectionsTable
+    arn: !GetAtt connectionsTable.Arn

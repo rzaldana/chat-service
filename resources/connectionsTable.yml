@@ -1,11 +1,11 @@
 connectionsTable:
   Type: AWS::DynamoDB::Table
   Properties:
-    TableName: connectionsTable
+    TableName: connectionsTable-${self:provider.stage}
     BillingMode: PAY_PER_REQUEST
     AttributeDefinitions:
       - AttributeName: id
-        AttributeType: N
+        AttributeType: S
     KeySchema:
       - AttributeName: id
         KeyType: HASH

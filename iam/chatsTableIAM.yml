@@ -4,4 +4,4 @@ chatsTableIAM:
     - dynamodb:PutItem
     - dynamodb:Scan
   Resource:
-    - arn:aws:dynamodb:#{AWS::Region}:#{AWS::AccountId}:table/chatsTable
+    - ${self:custom.chatsTable.arn}

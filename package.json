@@ -8,7 +8,10 @@
   },
   "author": "Raul Zaldana Calles",
   "license": "ISC",
-  "dependencies": {},
+  "dependencies": {
+    "aws-sdk": "^2.739.0",
+    "uuid": "^8.3.0"
+  },
   "devDependencies": {
     "serverless-bundle": "^2.0.0",
     "serverless-pseudo-parameters": "^2.5.0"

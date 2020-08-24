@@ -4,4 +4,4 @@ connectionsTableIAM:
     - dynamodb:PutItem
     - dynamodb:Scan
   Resource:
-    - arn:aws:dynamodb:#{AWS::Region}:#{AWS::AccountId}:table/connectionsTable
+    - ${self:custom.connectionsTable.arn}
