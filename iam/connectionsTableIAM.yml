@@ -3,5 +3,6 @@ connectionsTableIAM:
   Action:
     - dynamodb:PutItem
     - dynamodb:Scan
+    - dynamodb:GetItem
   Resource:
     - ${self:custom.connectionsTable.arn}
