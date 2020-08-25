@@ -6,16 +6,32 @@ export const handler = async (event, context) => {
 
     // create APIGatewayManagement Client
     const endpoint = "https://" + event.requestContext.domainName + "/" + event.requestContext.stage;
-    console.log(`endpoint: ${endpoint}`);
     const gateway = new AWS.ApiGatewayManagementApi({ endpoint });
 
-    // get user-provided message and ChatId
+    // get connectionId, message, and alias from user request
     const body = JSON.parse(event.body);
     const message = body.message;
-    const chatId = body.chatId;
-    console.log(`message before loop = ${message}`);
+    const connectionId = event.requestContext.connectionId;
 
-    // get chat record from chatsTable
+    // get connection record from connectionsTable
+    // to find chatId and alias
+    try {
+        let params = {
+            TableName: process.env.CONNECTIONS_TABLE_NAME,
+            Key: { id: connectionId }
+        };
+        let result = await dynamodb.get(params).promise();
+        var chatId = result.Item.chatId;
+        var alias = result.Item.alias;
+        console.log(`chatId = ${JSON.stringify(chatId)}`);
+
+    } catch (error) {
+        console.log("An error occured while getting the connection record from connectionsTable");
+        console.error(error);
+    }
+
+
+    // get chat record from chatsTable with chatId from above
     try {
         let params = {
             TableName: process.env.CHATS_TABLE_NAME,
@@ -34,12 +50,18 @@ export const handler = async (event, context) => {
     let participants = chat.participants;
     let n = participants.length;
 
+    // a string that is unlikely to appear in a text message
+    // and will separate the alias from the message in the
+    // string we send through the socket
+    const separator = "+/*/*";
+
+
     for (let i = 0; i < n; i++) {
         let participant = participants[i];
         try {
             console.log(`message during loop: ${message}`);
             await gateway.postToConnection({
-                Data: message,
+                Data: `${alias}${separator}${message}`,
                 ConnectionId: participant
             }).promise();
             console.log(`message after sending: ${message}`);

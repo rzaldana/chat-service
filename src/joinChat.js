@@ -25,6 +25,7 @@ export const handler = async (event, context) => {
     // add user to connectionsTable
     const connection = {
         id: connectionId,
+        chatId,
         alias
     };
 
