@@ -21,7 +21,8 @@ export const handler = async (event, context) => {
 
     const connection = {
         id: connectionId,
-        alias
+        alias,
+        chatId: chat.id
     };
 
 

@@ -4,5 +4,6 @@ connectionsTableIAM:
     - dynamodb:PutItem
     - dynamodb:Scan
     - dynamodb:GetItem
+    - dynamodb:DeleteItem
   Resource:
     - ${self:custom.connectionsTable.arn}
